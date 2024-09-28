@@ -1,0 +1,4 @@
+awscrt==0.21.1
+awsiotsdk==1.22.0
+python-dotenv==1.0.1
+RPi.GPIO==0.7.1
