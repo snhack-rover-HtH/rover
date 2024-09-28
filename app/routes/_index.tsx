@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Components/Navbar";
 import Notifications from "./Components/Notifications";
+import ProductSections from "./Components/ProductSections";
+import ProfileCard from "./Components/ProfileCard";
+import OrderHistory from "./Components/OrderHistory";
 
 export default function Component() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -73,8 +76,15 @@ export default function Component() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Notifications/> 
+        <ProductSections/>
       </main>
 
+      <div id="footer" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold mb-4">User Dashboard</h1>
+        <ProfileCard />
+        <h2 className="text-3xl font-bold mb-4">Order History</h2>
+        <OrderHistory />
+      </div>
     </div>
   );
 }

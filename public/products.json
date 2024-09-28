@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+      { "title": "Fresh Salad", "price": 9.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Grilled Chicken", "price": 14.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Fresh Salad", "price": 9.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Grilled Chicken", "price": 14.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Fresh Salad", "price": 9.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Grilled Chicken", "price": 14.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" }
+    ],
+    "chips": [
+      { "title": "Veggie Chips", "price": 3.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Tortilla Chips", "price": 2.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" }
+    ],
+    "drinks": [
+      { "title": "Fruit Smoothie", "price": 4.99, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" },
+      { "title": "Iced Tea", "price": 2.49, "allergens": "None", "image": "https://www.budgetbytes.com/wp-content/uploads/2017/03/Super-Fresh-Salad-V3-768x1023.jpg" }
+    ]
+  }
+  
