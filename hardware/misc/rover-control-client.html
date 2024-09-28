@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rover Control</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        button { font-size: 18px; margin: 10px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>Rover Control</h1>
+    <div>
+        <button onclick="sendCommand('forward')">Forward</button>
+        <button onclick="sendCommand('backward')">Backward</button>
+        <button onclick="sendCommand('left')">Left</button>
+        <button onclick="sendCommand('right')">Right</button>
+        <button onclick="sendCommand('stop')">Stop</button>
+    </div>
+    <div id="status"></div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        function sendCommand(action) {
+            fetch(`${API_URL}/send_command?action=${action}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').innerText = 'Command sent: ' + action;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('status').innerText = 'Error sending command';
+            });
+        }
+    </script>
+</body>
+</html>
