@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 
-const API_URL: string = process.env.API_URL_PYTHON || 'http://localhost:8000';
+const API_URL: string = "https://rover-python.onrender.com"
 
 export default function RoverControl(): JSX.Element {
   const [status, setStatus] = useState<string>('');
