@@ -7,16 +7,26 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         button { font-size: 18px; margin: 10px; padding: 10px 20px; }
+        .control-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 10px;
+        }
+        .control-grid button {
+            width: 200px;
+            height: 80px;
+        }
     </style>
 </head>
 <body>
     <h1>Rover Control</h1>
-    <div>
-        <button onclick="sendCommand('forward')">Forward</button>
-        <button onclick="sendCommand('backward')">Backward</button>
-        <button onclick="sendCommand('left')">Left</button>
-        <button onclick="sendCommand('right')">Right</button>
-        <button onclick="sendCommand('stop')">Stop</button>
+    <div class="control-grid">
+        <button onclick="sendCommand('stop')">Q<br>(Stop)</button>
+        <button onclick="sendCommand('left')">W<br>(Forward)</button>
+        <button onclick="sendCommand('forward')">D<br>(Clockwise)</button>
+        <button onclick="sendCommand('backward')">A<br>(Anti-clockwise)</button>
+        <button onclick="sendCommand('right')">S<br>(Backward)</button>
+
     </div>
     <div id="status"></div>
 
@@ -29,13 +39,23 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('status').innerText = 'Command sent: ' + action;
+                document.getElementById('status').innerText = 'Command sent: ';
             })
             .catch((error) => {
                 console.error('Error:', error);
                 document.getElementById('status').innerText = 'Error sending command';
             });
         }
+
+        document.addEventListener('keydown', function(event) {
+            switch(event.key.toLowerCase()) {
+                case 'w': sendCommand('left'); break; // Forward
+                case 'd': sendCommand('forward'); break; // Clockwise
+                case 'q': sendCommand('stop'); break;
+                case 'a': sendCommand('backward'); break; // Anti-clockwise
+                case 's': sendCommand('right'); break; // Backward
+            }
+        });
     </script>
 </body>
 </html>
