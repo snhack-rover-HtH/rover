@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 
-const API_URL = 'http://localhost:8000';
+const API_URL: string = process.env.API_URL_PYTHON || 'http://localhost:8000';
 
-export default function RoverControl() {
-  const [status, setStatus] = useState('');
+export default function RoverControl(): JSX.Element {
+  const [status, setStatus] = useState<string>('');
+  const [youtubeLink, setYoutubeLink] = useState<string>('');
+  const [embedUrl, setEmbedUrl] = useState<string>('');
 
-  const sendCommand = async (action : any) => {
+  const sendCommand = async (action: string): Promise<void> => {
     try {
       const response = await fetch(`${API_URL}/send_command?action=${action}`, {
         method: 'POST',
@@ -18,7 +20,7 @@ export default function RoverControl() {
     }
   };
 
-  const handleKeyDown = (event : any) => {
+  const handleKeyDown = (event: KeyboardEvent): void => {
     switch(event.key.toLowerCase()) {
       case 'w': sendCommand('left'); break; // Forward
       case 'd': sendCommand('forward'); break; // Clockwise
@@ -35,10 +37,58 @@ export default function RoverControl() {
     };
   }, []);
 
+  const handleYoutubeLinkChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setYoutubeLink(e.target.value);
+  };
+
+  const embedYoutubeVideo = (): void => {
+    const videoId = extractVideoId(youtubeLink);
+    if (videoId) {
+      setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
+    } else {
+      setStatus('Invalid YouTube URL');
+    }
+  };
+
+  const extractVideoId = (url: string): string | null => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-6">Rover Control</h1>
-      <div className="grid grid-cols-3 gap-4">
+     
+      <div className="mb-6 w-full max-w-md">
+        <input
+          type="text"
+          value={youtubeLink}
+          onChange={handleYoutubeLinkChange}
+          placeholder="Enter YouTube URL"
+          className="w-full px-3 py-2 border rounded-md"
+        />
+        <button
+          onClick={embedYoutubeVideo}
+          className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
+        >
+          Embed Video
+        </button>
+      </div>
+      {embedUrl && (
+        <div className="mb-6 w-full max-w-xl">
+          <iframe
+            width="100%"
+            height="315"
+            src={embedUrl}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Rover Live Stream"
+          ></iframe>
+        </div>
+      )}
+      <div className="grid grid-cols-3 gap-4 mb-6">
         <button onClick={() => sendCommand('stop')} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded">
           Q<br />(Stop)
         </button>
