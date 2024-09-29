@@ -39,13 +39,17 @@ for motor in MOTORS.values():
     GPIO.setup(motor['in2'], GPIO.OUT)
     GPIO.setup(motor['en'], GPIO.OUT)
     motor['pwm'] = GPIO.PWM(motor['en'], 1000)
-    motor['pwm'].start(75)
+    motor['pwm'].start(100)
+
+def set_pwm(pwm_int):
+    for motor in MOTORS.values():
+        motor['pwm'].ChangeDutyCycle(pwm_int)
 
 def set_motor(motor, direction):
-    if direction == 'forward':
+    if direction == 'backward':
         GPIO.output(motor['in1'], GPIO.HIGH)
         GPIO.output(motor['in2'], GPIO.LOW)
-    elif direction == 'backward':
+    elif direction == 'forward':
         GPIO.output(motor['in1'], GPIO.LOW)
         GPIO.output(motor['in2'], GPIO.HIGH)
     else:  # stop
@@ -54,17 +58,21 @@ def set_motor(motor, direction):
 
 def move_rover(action):
     if action == 'forward':
+        set_pwm(100)
         set_motor(MOTORS['right'], 'forward')
         set_motor(MOTORS['left'], 'forward')
     elif action == 'backward':
+        set_pwm(100)
         set_motor(MOTORS['right'], 'backward')
         set_motor(MOTORS['left'], 'backward')
     elif action == 'left':
-        set_motor(MOTORS['right'], 'forward')
-        set_motor(MOTORS['left'], 'backward')
-    elif action == 'right':
-        set_motor(MOTORS['right'], 'backward')
+        set_pwm(60)
         set_motor(MOTORS['left'], 'forward')
+        set_motor(MOTORS['right'], 'backward')
+    elif action == 'right':
+        set_pwm(60)
+        set_motor(MOTORS['left'], 'backward')
+        set_motor(MOTORS['right'], 'forward')
     elif action == 'stop':
         set_motor(MOTORS['right'], 'stop')
         set_motor(MOTORS['left'], 'stop')
