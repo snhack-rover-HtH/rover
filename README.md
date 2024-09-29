@@ -10,14 +10,14 @@ Our project introduces an autonomous robot that delivers snacks directly to part
 ## Used Techonologies: 
 | Front-end | Back-end | Deployment | Hardware |
 | ---------| --------| --- | --- |
-| Remix, React | Supabase | Vercel |  [Driver.js](https://driverjs.com/), WebGL for CAD file rendering
+| Remix, React | Supabase | Vercel |  [Driver.js](https://driverjs.com/), WebGL for CAD file rendering, Wires, Motors, Raspberry pi 3, Breadboard, AA Batteries, Powerbank, Motor driver
 
 
 </br>
 </br>
 </br>
 
-For more information regarding the vision of this project, check our [Devpost](https://Devpost.com).
+For more information, check our [Devpost](https://Devpost.com).
 
 
 ## How to host locally the web-app
