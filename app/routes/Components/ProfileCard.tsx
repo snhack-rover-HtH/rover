@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Card, CardTitle, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { User, Mail, MapPin } from 'lucide-react';
 

@@ -18,9 +18,15 @@ export default function Component() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+
+  const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
+  const [inputSearchValue, setInputSearchValue] = useState('');
+  const [filteredSearchSuggestions, setFilteredSearchSuggestions] = useState<string[]>([]);
+  
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartVisible, setCartVisible] = useState(false);
 
+  // Fetch suggestions for the first input field
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
@@ -61,6 +67,55 @@ export default function Component() {
     console.log("Selected Suggestion:", suggestion);
   };
 
+  // Fetch product titles for search suggestions
+  useEffect(() => {
+    const fetchSearchSuggestions = async () => {
+      try {
+        const response = await fetch('/products.json');
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+
+        console.log("Fetched Data:", data); // Inspect the fetched data
+
+        // Ensure that data is an object
+        if (typeof data === 'object' && !Array.isArray(data)) {
+          const titles = Object.values(data).flat().map((product: { title: string }) => product.title);
+          setSearchSuggestions(titles);
+          console.log("Available Search Suggestions:", titles);
+        } else {
+          console.error("Expected an object but got:", data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch Search suggestions:", error);
+      }
+    };
+
+    fetchSearchSuggestions();
+  }, []);
+
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputSearchValue(value);
+    console.log("Input Search Value:", value);
+
+    if (value) {
+      const filtered = searchSuggestions.filter((searchSuggestion) =>
+        searchSuggestion.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredSearchSuggestions(filtered);
+      console.log("Filtered Search Suggestions:", filtered);
+    } else {
+      setFilteredSearchSuggestions([]);
+    }
+  };
+
+  const handleSearchSuggestionClick = (searchSuggestion: string) => {
+    setInputSearchValue(searchSuggestion);
+    setFilteredSearchSuggestions([]);
+    console.log("Selected Search Suggestion:", searchSuggestion);
+  };
   
   const addToCart = (product: { id: number; title: string; price: number; weight: number }) => {
     setCartItems(prevItems => {
@@ -90,11 +145,19 @@ export default function Component() {
       <Navbar
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
+
         inputValue={inputValue}
         setInputValue={setInputValue}
         filteredSuggestions={filteredSuggestions}
         handleInputChange={handleInputChange}
         handleSuggestionClick={handleSuggestionClick}
+
+        inputSearchValue={inputSearchValue}
+        setInputSearchValue={setInputSearchValue}
+        filteredSearchSuggestions={filteredSearchSuggestions}
+        handleSearchInputChange={handleSearchInputChange}
+        handleSearchSuggestionClick={handleSearchSuggestionClick}
+
         cartItems={cartItems}
         updateQuantity={updateQuantity}
         cartVisible={cartVisible}
@@ -102,16 +165,10 @@ export default function Component() {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
-        <Notifications /> 
+        {/* <Notifications />  */}
         <ProductSections addToCart={addToCart} />
       </main>
 
-      <div id="footer" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-lg shadow-md mt-6">
-        <h1 className="text-3xl font-bold mb-4 text-indigo-800">User Dashboard</h1>
-        <ProfileCard />
-        {/* <h2 className="text-3xl font-bold mb-4 mt-8 text-indigo-800">Order History</h2>
-        <OrderHistory /> */}
-      </div>
     </div>
   );
 }

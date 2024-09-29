@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin, Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Input } from "./ui/input"; // Assuming you have a UI input component.
 import CartComponent from "./ShoppingCart"; // Adjust the import path as needed
 
 interface NavbarProps {
@@ -12,6 +12,13 @@ interface NavbarProps {
   filteredSuggestions: string[];
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSuggestionClick: (suggestion: string) => void;
+
+  inputSearchValue: string;
+  setInputSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  filteredSearchSuggestions: string[];
+  handleSearchInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearchSuggestionClick: (searchSuggestion: string) => void;
+
   cartItems: { id: number; name: string; quantity: number; price: number; weight: number }[];
   updateQuantity: (id: number, change: number) => void;
   cartVisible: boolean;
@@ -25,6 +32,10 @@ const Navbar: React.FC<NavbarProps> = ({
   filteredSuggestions,
   handleInputChange,
   handleSuggestionClick,
+  inputSearchValue,
+  filteredSearchSuggestions,
+  handleSearchInputChange,
+  handleSearchSuggestionClick,
   cartItems,
   updateQuantity,
   cartVisible,
@@ -44,13 +55,81 @@ const Navbar: React.FC<NavbarProps> = ({
               <MapPin className="absolute left-2 top-1/2 transform -translate-y-1/2 text-indigo-400" size={20} />
               <input
                 type="text"
-                placeholder="Enter your location, ex: CRX210"
+                placeholder="Enter location. ex:CRX210"
                 value={inputValue}
                 onChange={handleInputChange}
                 className="pl-8 pr-4 py-2 w-48 text-sm bg-white border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
               />
+            </div>
+          </div>
+
+          <div className="hidden md:block flex-1 max-w-lg mx-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400" />
+              <input
+                type="text"
+                placeholder="Search here..."
+                value={inputSearchValue}
+                onChange={handleSearchInputChange}
+                className="pl-10 pr-4 py-2 w-full bg-white border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-indigo-800 placeholder-indigo-300"
+              />
+              {filteredSearchSuggestions.length > 0 && (
+                <ul className="absolute left-0 z-10 w-full bg-white border border-indigo-200 rounded-md shadow-lg">
+                  {filteredSearchSuggestions.map((searchSuggestion, index) => (
+                    <li key={index}>
+                      <button
+                        onClick={() => handleSearchSuggestionClick(searchSuggestion)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            handleSearchSuggestionClick(searchSuggestion);
+                          }
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-indigo-50 text-indigo-700 cursor-pointer"
+                      >
+                        {searchSuggestion}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center relative">
+            <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100">
+                <User className="h-6 w-6 mr-2" />
+                Hi! User
+            </Button>
+            <Button variant="ghost" size="icon" className="mr-2 text-indigo-600 hover:bg-indigo-100" onClick={toggleCart}>
+              <ShoppingCart className="h-6 w-6" />
+              {/* Circle with item count */}
+              {cartItems.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+                  {cartItems.reduce((acc, item) => acc + item.quantity, 0)} {/* Total quantity */}
+                </span>
+              )}
+            </Button>
+
+          </div>
+
+          <Button variant="ghost" size="icon" className="md:hidden text-indigo-600 hover:bg-indigo-100" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <Menu className="h-6 w-6" />
+          </Button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="mt-4 md:hidden">
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400" />
+              <input
+                type="text"
+                placeholder="Search here..."
+                value={inputValue}
+                onChange={handleInputChange}
+                className="pl-10 pr-4 py-2 w-full bg-white border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-indigo-800 placeholder-indigo-300"
+              />
               {filteredSuggestions.length > 0 && (
-                <ul className="absolute left-0 z-10 w-48 bg-white border border-indigo-200 rounded-md shadow-lg">
+                <ul className="absolute left-0 z-10 w-full bg-white border border-indigo-200 rounded-md shadow-lg">
                   {filteredSuggestions.map((suggestion, index) => (
                     <li key={index}>
                       <button
@@ -69,46 +148,15 @@ const Navbar: React.FC<NavbarProps> = ({
                 </ul>
               )}
             </div>
-          </div>
-          <div className="hidden md:block flex-1 max-w-lg mx-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400" />
-              <input
-                type="text"
-                placeholder="Search here..."
-                className="pl-10 pr-4 py-2 w-full bg-white border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-indigo-800 placeholder-indigo-300"
-              />
-            </div>
-          </div>
-          <div className="hidden md:flex items-center">
-            <Button variant="ghost" size="icon" className="mr-2 text-indigo-600 hover:bg-indigo-100" onClick={toggleCart}>
-              <ShoppingCart className="h-6 w-6" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100">
-              <a href="#footer" className="flex items-center no-underline text-indigo-600">
-                <User className="h-6 w-6 mr-2" />
-                Hi! User
-              </a>
-            </Button>
-          </div>
-          <Button variant="ghost" size="icon" className="md:hidden text-indigo-600 hover:bg-indigo-100" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <Menu className="h-6 w-6" />
-          </Button>
-        </div>
-        {mobileMenuOpen && (
-          <div className="mt-4 md:hidden">
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400" />
-              <input
-                type="text"
-                placeholder="Search here..."
-                className="pl-10 pr-4 py-2 w-full bg-white border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-indigo-800 placeholder-indigo-300"
-              />
-            </div>
             <div className="flex justify-around">
               <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100" onClick={toggleCart}>
                 <ShoppingCart className="h-6 w-6" />
-              </Button>
+                {cartItems.length > 0 && (
+                  <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+                    {cartItems.reduce((acc, item) => acc + item.quantity, 0)} {/* Total quantity */}
+                  </span>
+                )}
+              </Button> 
               <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100">
                 <User className="h-6 w-6" />
               </Button>
@@ -116,6 +164,7 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
         )}
       </div>
+
       <CartComponent 
         visible={cartVisible} 
         onClose={() => setCartVisible(false)} 

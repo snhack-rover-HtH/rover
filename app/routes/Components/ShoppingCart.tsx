@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Card, CardTitle, CardContent } from './ui/card';
 import { Button } from "./ui/button";
 import { Minus, Plus, ShoppingCart as CartIcon, X } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
