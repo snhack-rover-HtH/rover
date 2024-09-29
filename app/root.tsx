@@ -1,3 +1,4 @@
+import { LiveReload } from "@remix-run/react";
 import {
   Links,
   Meta,
@@ -32,6 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <LiveReload />
         {children}
         <ScrollRestoration />
         <Scripts />
