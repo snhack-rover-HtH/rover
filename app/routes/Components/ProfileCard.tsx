@@ -13,11 +13,11 @@ export const loader = async () => {
   );
 
   const { data } = await supabase.from('location').select('room_number');
-  return data;
+  return data ?? [];  // Ensure data is always an array, even if it's null
 };
 
 const ProfileCard: React.FC = () => {
-  const locations = useLoaderData() as { room_number: string }[]; // Get locations from loader
+  const locations = useLoaderData() as { room_number: string }[] || []; // Safeguard to ensure locations is an array
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('John Doe');
   const [location, setLocation] = useState('CRX101'); // Default to the first location
@@ -25,6 +25,7 @@ const ProfileCard: React.FC = () => {
   const [tempLocation, setTempLocation] = useState(location);
 
   const handleEdit = () => {
+    console.log(name, location);
     setIsEditing(true);
     setTempName(name);
     setTempLocation(location);
@@ -65,11 +66,15 @@ const ProfileCard: React.FC = () => {
                 value={tempLocation}
                 onChange={(e) => setTempLocation(e.target.value)}
               >
-                {locations.map((loc: { room_number: string }) => (
-                  <option key={loc.room_number} value={loc.room_number}>
-                    {loc.room_number}
-                  </option>
-                ))}
+                {locations.length > 0 ? (
+                  locations.map((loc: { room_number: string }) => (
+                    <option key={loc.room_number} value={loc.room_number}>
+                      {loc.room_number}
+                    </option>
+                  ))
+                ) : (
+                  <option>No Locations Available</option>
+                )}
               </select>
             </>
           ) : (
@@ -94,7 +99,7 @@ const ProfileCard: React.FC = () => {
               <User className="mr-2 h-4 w-4" />
               Edit Profile
             </Button>
-          )} 
+          )}
         </div>
       </CardContent>
     </Card>
