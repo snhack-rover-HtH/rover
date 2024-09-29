@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Components/Navbar";
-import Notifications from "./Components/Notifications";
 import ProductSections from "./Components/ProductSections";
-import ProfileCard from "./Components/ProfileCard";
-import OrderHistory from "./Components/OrderHistory";
+// import Notifications from "./Components/Notifications";
+// import ProfileCard from "./Components/ProfileCard";
+// import OrderHistory from "./Components/OrderHistory";
 
 interface CartItem {
   id: number;

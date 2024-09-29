@@ -1,7 +1,6 @@
 import React from 'react';
 import { MapPin, Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input"; // Assuming you have a UI input component.
 import CartComponent from "./ShoppingCart"; // Adjust the import path as needed
 
 interface NavbarProps {
@@ -24,7 +23,6 @@ interface NavbarProps {
   cartVisible: boolean;
   setCartVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
 const Navbar: React.FC<NavbarProps> = ({
   mobileMenuOpen,
   setMobileMenuOpen,
@@ -60,6 +58,25 @@ const Navbar: React.FC<NavbarProps> = ({
                 onChange={handleInputChange}
                 className="pl-8 pr-4 py-2 w-48 text-sm bg-white border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
               />
+              {filteredSuggestions.length > 0 && (
+                <ul className="absolute left-0 z-10 w-full bg-white border border-indigo-200 rounded-md shadow-lg">
+                  {filteredSuggestions.map((suggestion, index) => (
+                    <li key={index}>
+                      <button
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            handleSuggestionClick(suggestion);
+                          }
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-indigo-50 text-indigo-700 cursor-pointer"
+                      >
+                        {suggestion}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
@@ -95,6 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
+          {/* Cart and User Icons */}
           <div className="hidden md:flex items-center relative">
             <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100">
                 <User className="h-6 w-6 mr-2" />
@@ -102,14 +120,12 @@ const Navbar: React.FC<NavbarProps> = ({
             </Button>
             <Button variant="ghost" size="icon" className="mr-2 text-indigo-600 hover:bg-indigo-100" onClick={toggleCart}>
               <ShoppingCart className="h-6 w-6" />
-              {/* Circle with item count */}
               {cartItems.length > 0 && (
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                  {cartItems.reduce((acc, item) => acc + item.quantity, 0)} {/* Total quantity */}
+                  {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
               )}
             </Button>
-
           </div>
 
           <Button variant="ghost" size="icon" className="md:hidden text-indigo-600 hover:bg-indigo-100" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -124,8 +140,8 @@ const Navbar: React.FC<NavbarProps> = ({
               <input
                 type="text"
                 placeholder="Search here..."
-                value={inputValue}
-                onChange={handleInputChange}
+                value={inputValue} // Note: Use the inputValue here for location.
+                onChange={handleInputChange} // Make sure this is the correct handler
                 className="pl-10 pr-4 py-2 w-full bg-white border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent text-indigo-800 placeholder-indigo-300"
               />
               {filteredSuggestions.length > 0 && (
@@ -153,10 +169,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 <ShoppingCart className="h-6 w-6" />
                 {cartItems.length > 0 && (
                   <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                    {cartItems.reduce((acc, item) => acc + item.quantity, 0)} {/* Total quantity */}
+                    {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
                   </span>
                 )}
-              </Button> 
+              </Button>
               <Button variant="ghost" size="icon" className="text-indigo-600 hover:bg-indigo-100">
                 <User className="h-6 w-6" />
               </Button>
