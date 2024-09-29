@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import Section from './Section';
 
-// Define the Product interface
 interface Product {
+  id: number;
   title: string;
   price: number;
-  allergens: string;
+  weight: number;
   image: string;
 }
 
-// Define the Products interface to hold all sections
 interface Products {
-  recommendations: Product[];
+  healthyOptions: Product[];
   chips: Product[];
   drinks: Product[];
 }
 
-const ProductSections: React.FC = () => {
-  const [products, setProducts] = useState<Products>({ recommendations: [], chips: [], drinks: [] });
+interface ProductSectionsProps {
+  addToCart: (product: Product) => void;
+}
+
+const ProductSections: React.FC<ProductSectionsProps> = ({ addToCart }) => {
+  const [products, setProducts] = useState<Products>({
+    healthyOptions: [],
+    chips: [],
+    drinks: []
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch('./products.json'); 
-      const data = await response.json();
-      setProducts(data);
+      try {
+        const response = await fetch('./products.json'); 
+        const data = await response.json();
+        setProducts({
+          healthyOptions: data.healthyOptions || [],
+          chips: data.chips || [],
+          drinks: data.drinks || []
+        });
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
     };
 
     fetchProducts();
   }, []);
 
   return (
-    <main className="flex-1 container mx-auto py-8 px-4 space-y-12">
-      <Section title="Recommendations" items={products.recommendations} />
-      <Section title="Chips" items={products.chips} />
-      <Section title="Drinks" items={products.drinks} />
+    <main className="flex-1 container mx-auto py-12 px-4 space-y-16 bg-gradient-to-b from-blue-50 to-indigo-100">
+      <Section title="Healthy Options" items={products.healthyOptions} onAddToCart={addToCart} />
+      <Section title="Chips" items={products.chips} onAddToCart={addToCart} />
+      <Section title="Drinks" items={products.drinks} onAddToCart={addToCart} />
     </main>
   );
 };
